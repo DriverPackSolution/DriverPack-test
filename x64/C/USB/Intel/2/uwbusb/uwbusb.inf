@@ -1,0 +1,85 @@
+;---------------------------------------------------------------------------------------
+;
+; Copyright (c) Intel Corporation (2007).
+;
+; INTEL MAKES NO WARRANTY OF ANY KIND REGARDING THE CODE.  THIS CODE IS LICENSED
+; ON AN "AS IS" BASIS AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,
+; INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL DOES NOT PROVIDE ANY UPDATES,
+; ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY WARRANTY OF
+; MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR ANY PARTICULAR PURPOSE, OR ANY
+; OTHER WARRANTY.  Intel disclaims all liability, including liability for
+; infringement of any proprietary rights, relating to use of the code. No license,
+; express or implied, by estoppel or otherwise, to any intellectual property rights
+; is granted herein.
+;
+;---------------------------------------------------------------------------------------
+; Installation inf for USB connected UWB Devices
+;
+
+
+[Version]
+Signature="$CHICAGO$"
+Class=USB
+ClassGUID={36FC9E60-C465-11CF-8056-444553540000}
+provider=%INTEL%
+DriverVer=06/13/2008,1.1.0006.0000
+CatalogFile=uwbusb.cat
+
+[SourceDisksNames]
+1=%DiskName%,,,
+
+[SourceDisksFiles]
+usbuwbmini.sys = 1
+uwbctrl.sys = 1
+
+[Manufacturer]
+%MfgName%=Intel,NTx86,NTamd64
+
+[Intel.NTx86]
+%USB\VID_8087&PID_0002.DeviceDesc%=uwbusb.Dev, USB\VID_8087&PID_0002
+
+[Intel.NTamd64]
+%USB\VID_8087&PID_0002.DeviceDesc%=uwbusb.Dev, USB\VID_8087&PID_0002
+
+[DestinationDirs]
+uwbusb.Files.Ext = 10,System32\Drivers
+
+[uwbusb.Dev.NT]
+CopyFiles=uwbusb.Files.Ext
+
+[uwbusb.Dev.NT.Services]
+Addservice = uwbusb, 0x00000002, uwbusb.AddService, uwbusb.AddEventLog
+AddReg=uwbusb.AddReg.NT
+
+[uwbusb.AddService]
+DisplayName    = %uwbusb.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\usbuwbmini.sys
+LoadOrderGroup = Base
+
+[uwbusb.AddEventLog]
+AddReg = uwb_EventLog_AddReg
+
+[uwb_EventLog_AddReg]
+HKR,,EventMessageFile,0x00020000,"%%SystemRoot%%\System32\IoLogMsg.dll;%%SystemRoot%%\System32\drivers\uwbctrl.sys"
+HKR,,TypesSupported,0x00010001,7
+
+
+[uwbusb.AddReg.NT]
+HKCR,,Controller,1,01
+
+[uwbusb.Files.Ext]
+usbuwbmini.sys
+uwbctrl.sys
+
+;---------------------------------------------------------------;
+
+[Strings]
+INTEL = "Intel Corporation"
+MfgName="Intel"
+DiskName="UWB Installation Disk"
+USB\VID_8087&PID_0002.DeviceDesc="Intel(R) Wireless UWB Link 1480M Control Driver"
+uwbusb.SvcDesc="UWB Bus Control USB-Miniport Driver"
+

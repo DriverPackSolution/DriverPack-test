@@ -1,0 +1,84 @@
+;---------------------------------------------------------------------------------------
+;
+; Copyright (c) Intel Corporation (2007).
+;
+; INTEL MAKES NO WARRANTY OF ANY KIND REGARDING THE CODE.  THIS CODE IS LICENSED
+; ON AN "AS IS" BASIS AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,
+; INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL DOES NOT PROVIDE ANY UPDATES,
+; ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY WARRANTY OF
+; MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR ANY PARTICULAR PURPOSE, OR ANY
+; OTHER WARRANTY.  Intel disclaims all liability, including liability for
+; infringement of any proprietary rights, relating to use of the code. No license,
+; express or implied, by estoppel or otherwise, to any intellectual property rights
+; is granted herein.
+;
+;---------------------------------------------------------------------------------------
+; Installation inf for 
+;	Intel(R) Wireless UWB Link 1480M Device Firmware Utility
+;
+; Installation inf for Intels UWB Cable Based Association Framework Driver
+
+
+[Version]
+Signature="$CHICAGO$"
+Class=USB
+ClassGUID={36FC9E60-C465-11CF-8056-444553540000}
+provider=%INTEL%
+DriverVer=08/28/2007,1.4.0022.0000
+CatalogFile=cbaf.cat
+
+[SourceDisksNames]
+1="CBAF Installation Disk",,,
+
+[SourceDisksFiles]
+cbaf.sys = 1
+
+[Manufacturer]
+%MfgName%=Intel,NTx86,NTamd64
+
+[Intel.NTx86]
+%USB\CLASS_EF&SUBCLASS_03&PROT_01.DeviceDesc%=cbaf.Dev, USB\CLASS_EF&SUBCLASS_03&PROT_01
+
+[Intel.NTamd64]
+%USB\CLASS_EF&SUBCLASS_03&PROT_01.DeviceDesc%=cbaf.Dev, USB\CLASS_EF&SUBCLASS_03&PROT_01
+
+[DestinationDirs]
+cbaf.Files.Ext = 10,System32\Drivers
+
+[cbaf.Dev.NT]
+CopyFiles=cbaf.Files.Ext
+
+[cbaf.Dev.NT.Services]
+Addservice = cbaf, 0x00000002, cbaf.AddService, cbaf.AddEventLog
+AddReg=cbaf.AddReg.NT
+
+[cbaf.AddService]
+DisplayName    = %cbaf.SvcDesc%
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\cbaf.sys
+LoadOrderGroup = Base
+
+[cbaf.AddEventLog]
+AddReg = uwb_EventLog_AddReg
+
+[uwb_EventLog_AddReg]
+HKR,,EventMessageFile,0x00020000,"%%SystemRoot%%\System32\IoLogMsg.dll;%%SystemRoot%%\System32\drivers\cbaf.sys"
+HKR,,TypesSupported,0x00010001,7
+
+
+[cbaf.AddReg.NT]
+HKCR,,Controller,1,01
+
+[cbaf.Files.Ext]
+cbaf.sys
+
+;---------------------------------------------------------------;
+
+[Strings]
+INTEL = "Intel Corporation"
+MfgName="Intel"
+USB\CLASS_EF&SUBCLASS_03&PROT_01.DeviceDesc="Intel(R) UWB Cable Based Association Framework Driver"
+cbaf.SvcDesc="UWB Cable Based Association Framework Driver"
+

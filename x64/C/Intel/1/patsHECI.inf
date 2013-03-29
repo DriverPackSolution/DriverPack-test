@@ -1,0 +1,110 @@
+; ****************************************************************************
+; ****************************************************************************
+; **    Filename:  patsHECI.INF                                                 
+; **    Abstract:  Intel(R) C600/X79 series chipset
+; **    Last Update: June 8, 2011 (Version 9.2.3 Build 1016)
+; ****************************************************************************
+; ****************************************************************************
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4D36E97D-E325-11CE-BFC1-08002BE10318}
+Provider=%INTEL%
+CatalogFile=patsHECI.cat
+DriverVer=06/08/2011, 1.2.3.1016
+
+[SourceDisksNames] 
+[SourceDisksFiles] 
+
+[PackageInfo]
+Name=Chipset
+Condition=Provider(Microsoft)||InstallDriverName(Chipset)
+
+[ControlFlags]
+ExcludeFromSelect=*
+
+[Manufacturer]
+%INTEL%=INTEL_SYS,NTamd64
+
+[INTEL_SYS]
+;HECI
+%PCI\VEN_8086&DEV_1D3A.DeviceDesc%=NO_DRV,PCI\VEN_8086&DEV_1D3A
+%PCI\VEN_8086&DEV_1D3B.DeviceDesc%=NO_DRV,PCI\VEN_8086&DEV_1D3B
+
+[INTEL_SYS.NTamd64]
+;HECI
+%PCI\VEN_8086&DEV_1D3A.DeviceDesc%=NO_DRV,PCI\VEN_8086&DEV_1D3A
+%PCI\VEN_8086&DEV_1D3B.DeviceDesc%=NO_DRV,PCI\VEN_8086&DEV_1D3B
+
+[PCI_DRV]
+Include=machine.inf
+Needs=PCI_DRV
+
+[PCI_DRV.Services]
+Include=machine.inf
+Needs=PCI_DRV.Services
+
+[PCI_DRV.HW]
+Include=machine.inf
+Needs=PCI_DRV.HW
+
+;**************************************************************************
+; Do-nothing section used to avoid "Unknown hardware" installation prompts.
+
+[NO_DRV]
+Include=machine.inf
+Needs=NO_DRV
+
+[NO_DRV.Services]
+Include=machine.inf
+Needs=NO_DRV.Services
+
+;****************************************************
+; Generic ISA Root Bus / PCI-ISA Bridge / PCI-EISA Bridge
+
+[ISAPNP_DRV]
+Include=machine.inf
+Needs=ISAPNP_DRV
+
+[ISAPNP_DRV.Services]
+Include=machine.inf
+Needs=ISAPNP_DRV.Services
+
+[Strings]
+INTEL="Intel"
+;HECI
+PCI\VEN_8086&DEV_1D3A.DeviceDesc="Intel(R) 6 Series/C200 Series Management Engine Interface - 1D3A"
+PCI\VEN_8086&DEV_1D3B.DeviceDesc="Intel(R) 6 Series/C200 Series Management Engine Interface - 1D3B"
+
+; Copyright (c) 2006-2010 Intel Corporation
+
+; ************************************************************
+; Intel is making no claims of usability, efficacy or 
+; warranty.  
+; ************************************************************
+; Information in this document is provided in connection with 
+; Intel products.  No license, express or implied, by estoppel 
+; or otherwise, to any intellectual property rights is granted 
+; by this document.  Intel assumes no liability whatsoever, 
+; and Intel disclaims any express or implied warranty, 
+; relating to sale and/or use of Intel products including 
+; liability or warranties relating to fitness for a particular 
+; purpose, merchantability, or infringement of any patent, 
+; copyright or other intellectual property right.  Intel 
+; products are not intended for use in medical, life saving, 
+; or life sustaining applications.
+
+; ************************************************************
+; Intel Corporation disclaims all warranties and liabilities 
+; for the use of this document and the information contained 
+; herein, and assumes no responsibility for any errors which 
+; may appear in this document, nor does Intel make a 
+; commitment to update the information contained herein. Intel 
+; reserves the right to make changes to this document at any 
+; time, without notice.
+; ************************************************************
+; ************************************************************
+
+; * Third-party brands and names are the property of their 
+; respective owners.

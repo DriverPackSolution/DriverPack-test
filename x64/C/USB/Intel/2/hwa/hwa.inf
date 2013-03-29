@@ -1,0 +1,113 @@
+;---------------------------------------------------------------------------------------
+;
+; Copyright (c) Intel Corporation (2007).
+;
+; INTEL MAKES NO WARRANTY OF ANY KIND REGARDING THE CODE.  THIS CODE IS LICENSED
+; ON AN "AS IS" BASIS AND INTEL WILL NOT PROVIDE ANY SUPPORT, ASSISTANCE,
+; INSTALLATION, TRAINING OR OTHER SERVICES.  INTEL DOES NOT PROVIDE ANY UPDATES,
+; ENHANCEMENTS OR EXTENSIONS.  INTEL SPECIFICALLY DISCLAIMS ANY WARRANTY OF
+; MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR ANY PARTICULAR PURPOSE, OR ANY
+; OTHER WARRANTY.  Intel disclaims all liability, including liability for
+; infringement of any proprietary rights, relating to use of the code. No license,
+; express or implied, by estoppel or otherwise, to any intellectual property rights
+; is granted herein.
+;
+;---------------------------------------------------------------------------------------
+; Installation inf for HWA device
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=USB
+ClassGuid={36FC9E60-C465-11CF-8056-444553540000}
+Provider=%INTEL%
+DriverVer=09/29/2008,1.1.0006.0000
+CatalogFile=hwa.cat
+
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskId1%,,,""
+
+[SourceDisksFiles]
+HWA.sys  = 1,,
+
+
+;*****************************************
+; HWA Install Section
+;*****************************************
+
+[Manufacturer]
+%Intel%=Intel,NTx86,NTamd64
+
+[Intel.NTx86]
+%IntelHWA.DeviceDesc%=IntelHWA_Device, UWB\HWA
+
+[Intel.NTamd64]
+%IntelHWA.DeviceDesc%=IntelHWA_Device, UWB\HWA
+
+[IntelHWA_Device.NT]
+CopyFiles=Drivers_Dir
+
+[IntelHWA_Device.NT.HW]
+AddReg=IntelHWA_Device.NT.AddReg
+
+[IntelHWA_Device.NT.AddReg]                            
+;HKR,,DeviceCharacteristics,0x10001,0x0100         ; Use same security checks on relative opens
+;HKR,,Security,,"D:P(A;;GA;;;BA)(A;;GA;;;SY)"      ; Allow generic-all access to Built-in administrators and Local system 
+
+[Drivers_Dir]
+HWA.sys
+
+
+;-------------- Service installation
+[IntelHWA_Device.NT.Services]
+AddService = HWA,%SPSVCINST_ASSOCSERVICE%, IntelHWA_Service_Inst
+
+; -------------- HWA driver install sections
+[IntelHWA_Service_Inst]
+DisplayName    = %HWA.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START 
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %10%\System32\Drivers\HWA.sys
+LoadOrderGroup = Base
+;ServiceBinary  = %12%\HWA.sys
+;LoadOrderGroup = Extended Base
+
+
+;
+;--- IntelHWA_Device Coinstaller installation ------
+;
+[DestinationDirs]
+IntelHWA_Device_CoInstaller_CopyFiles = 11
+
+[IntelHWA_Device.NT.CoInstallers]
+AddReg=IntelHWA_Device_CoInstaller_AddReg
+CopyFiles=IntelHWA_Device_CoInstaller_CopyFiles
+
+[IntelHWA_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01005.dll,WdfCoInstaller"
+
+[IntelHWA_Device_CoInstaller_CopyFiles]
+WdfCoInstaller01005.dll
+
+[SourceDisksFiles]
+WdfCoInstaller01005.dll=1 ; make sure the number matches with SourceDisksNames
+
+[IntelHWA_Device.NT.Wdf]
+KmdfService = HWA, HWA_wdfsect
+[HWA_wdfsect]
+KmdfLibraryVersion = 1.0
+
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+INTEL = "Intel Corporation"
+StdMfg = "Intel"
+DiskId1 = "Intel(R) Wireless USB Host Adapter #1"
+IntelHWA.DeviceDesc = "Intel(R) Wireless UWB Link 1480M Host Wire Adapter"
+HWA.SVCDESC = "Intel(R) Wireless USB Host Adapter"
+
